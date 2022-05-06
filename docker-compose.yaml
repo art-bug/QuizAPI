@@ -1,0 +1,36 @@
+services:
+  database:
+    container_name: database-container
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: QuizDatabase
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin-container
+    depends_on:
+      - database
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+
+  quiz-api-worker:
+    build: .
+    command: uvicorn quiz_api:app --host 0.0.0.0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+
+volumes:
+  db-data:

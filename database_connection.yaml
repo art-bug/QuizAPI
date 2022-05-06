@@ -1,0 +1,10 @@
+database:
+  dbms: postgresql
+  driver: asyncpg
+  name: QuizDatabase
+  user: postgres
+  password: admin
+  host: database
+  port: 5432
+  minsize: 0
+  maxsize: 128
